@@ -1,0 +1,7 @@
+{
+    "domain": "https://localhost",
+    "logLevel": "trace",
+    "libre": {
+        "timeout": 20000
+    }
+}

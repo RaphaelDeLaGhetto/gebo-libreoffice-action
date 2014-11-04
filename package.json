@@ -1,0 +1,48 @@
+{
+  "name": "gebo-libreoffice-action",
+  "description": "A LibreOffice-dependent gebo action document converter",
+  "version": "0.0.0",
+  "homepage": "https://github.com/RaphaelDeLaGhetto/gebo-libreoffice-action",
+  "author": {
+    "name": "Daniel Bidulock",
+    "email": "daniel@capitolhill.ca"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-libreoffice-action.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RaphaelDeLaGhetto/gebo-libreoffice-action/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/RaphaelDeLaGhetto/gebo-libreoffice-action/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "gebo-libreoffice-action.js",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
+  "dependencies": {
+    "fs-extra": "^0.12.0",
+    "gebo-utils": "*",
+    "nconf": "*",
+    "q": "*",
+    "winston": "*"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-nodeunit": "*",
+    "mime": "^1.2.11",
+    "sinon": "^1.11.1"
+  },
+  "keywords": [
+    "gebo",
+    "agent",
+    "action"
+  ]
+}
