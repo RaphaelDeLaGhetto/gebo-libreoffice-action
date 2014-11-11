@@ -1,7 +1,7 @@
 {
   "name": "gebo-libreoffice-action",
   "description": "A LibreOffice-dependent gebo action document converter",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/RaphaelDeLaGhetto/gebo-libreoffice-action",
   "author": {
     "name": "Daniel Bidulock",
