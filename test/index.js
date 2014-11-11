@@ -62,6 +62,32 @@ exports.convert = {
     },
 
     /**
+     * Time out
+     */
+    'Kill the libreoffice process if it executes longer than allowed': function(test) {
+        test.expect(1);
+        agent.actions.convert({ resource: 'convert',
+                                execute: 'true',
+                              },
+                              { content: { format: 'docx', raw: true, timeLimit: 5 },
+                                file: {
+                                    path: '/tmp/doc.doc',
+                                    originalname: 'mydoc.doc',
+                                    type: 'application/msword',
+                                    size: 9216,
+                                },
+          }).
+        then(function(doc) {
+            test.equal(doc.error, 'Sorry, that file took too long to process');
+            test.done();
+          }).
+        catch(function(err) {
+            test.ok(false, err);
+            test.done();
+          });
+    },
+
+    /**
      * DOC
      */
     'Convert a DOC to a DOCX and return raw data': function(test) {
