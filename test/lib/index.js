@@ -36,48 +36,17 @@ exports.convert = {
               });
     },
 
-    // This is not the most confidence-inspiring test. If all the subsequent tests pass
-    // then the process-killing functionality works, because that means that there isn't a stray
-    // libreoffice mucking everything up.
-    //
-    // The empty format string is what causes libreoffice to run forever.
     'Kill the libreoffice process if it executes longer than allowed': function(test) {
-        test.expect(2);
-        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'docx' }).
+        test.expect(1);
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { timeLimit: 50, format: 'docx' }).
             then(function(path) {
-                try {
-                  fse.openSync('/tmp/doc..pid', 'r');         
-                  test.ok(true);
-                  fse.openSync(path, 'r');         
-                  test.ok(false, 'The file at the returned path shouldn\'t exist');
-                }
-                catch(err) {
-                  test.ok(true);
-                }
+                test.ok(false, 'This should have thrown an error');
                 test.done();
               }).
             catch(function(err) {
-                test.ok(false, err);
+                test.equal(err, 'Sorry, that file took too long to process');
                 test.done();
               });
-//        test.expect(2);
-//        doc.convert('./test/docs/doc.doc', '', '/tmp/gebo-libreoffice').
-//            then(function(path) {
-//                try {
-//                  fse.openSync('/tmp/doc..pid', 'r');         
-//                  test.ok(true);
-//                  fse.openSync(path, 'r');         
-//                  test.ok(false, 'The file at the returned path shouldn\'t exist');
-//                }
-//                catch(err) {
-//                  test.ok(true);
-//                }
-//                test.done();
-//              }).
-//            catch(function(err) {
-//                test.ok(false, err);
-//                test.done();
-//              });
     },
 
     /**
@@ -851,54 +820,3 @@ exports.convert = {
     },
 };
 
-
-/**
- * getOutputFileName
- */
-//exports.getOutputFileName = {
-//
-//    'Change the file extension to that specified': function(test) {
-//        test.expect(2);
-//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc.doc', 'pdf');        
-//        test.equal(filename, 'doc.pdf');
-//        filename = doc.getOutputFileName('pdf.pdf', 'docx');        
-//        test.equal(filename, 'pdf.docx');
-//        test.done();
-//    },
-//
-//    'Change the file extension to that specified on an infile with no extension': function(test) {
-//        test.expect(2);
-//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc', 'pdf');        
-//        test.equal(filename, 'doc.pdf');
-//        filename = doc.getOutputFileName('pdf.pdf', 'docx');
-//        test.equal(filename, 'pdf.docx');
-//        test.done();
-//    },
-//
-//    'Change the file extension to that specified on hidden file with no extension': function(test) {
-//        test.expect(2);
-//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden', 'pdf');        
-//        test.equal(filename, '.hidden.pdf');
-//        filename = doc.getOutputFileName('.hidden', 'docx');        
-//        test.equal(filename, '.hidden.docx');
-//        test.done();
-//    },
-//
-//    'Change the file extension to that specified on a hidden file with an extension': function(test) {
-//        test.expect(2);
-//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden.rtf', 'pdf');        
-//        test.equal(filename, '.hidden.pdf');
-//        filename = doc.getOutputFileName('.hidden.pdf', 'docx');        
-//        test.equal(filename, '.hidden.docx');
-//        test.done();
-//    },
-//
-//    'Should overwrite any unusual extensions': function(test) {
-//        test.expect(2);
-//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/somefile.someweirdextension', 'rtf');        
-//        test.equal(filename, 'somefile.rtf');
-//        filename = doc.getOutputFileName('somefile.someweirdextension', 'docx');        
-//        test.equal(filename, 'somefile.docx');
-//        test.done();
-//    },
-//};
