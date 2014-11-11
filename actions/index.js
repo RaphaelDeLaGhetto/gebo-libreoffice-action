@@ -30,7 +30,7 @@ module.exports = function() {
             if (err) {
               deferred.resolve({ error: err });
             }
-            libre.convert(message.file.path, message.content.format, destDir).
+            libre.convert(message.file.path, destDir, message.content).
                 then(function(path) {
                     var filename = libre.getOutputFileName(message.file.originalname, message.content.format);
                     var newPath = path.split('/');

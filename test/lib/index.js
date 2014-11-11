@@ -19,7 +19,7 @@ exports.convert = {
      */
     'Write the libreoffice PID to a file in the output directory': function(test) {
         test.expect(1);
-        doc.convert('./test/docs/doc.doc', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 try {
                   fse.openSync('/tmp/doc.docx.pid', 'r');
@@ -43,7 +43,7 @@ exports.convert = {
     // The empty format string is what causes libreoffice to run forever.
     'Kill the libreoffice process if it executes longer than allowed': function(test) {
         test.expect(2);
-        doc.convert('./test/docs/doc.doc', '', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 try {
                   fse.openSync('/tmp/doc..pid', 'r');         
@@ -60,6 +60,24 @@ exports.convert = {
                 test.ok(false, err);
                 test.done();
               });
+//        test.expect(2);
+//        doc.convert('./test/docs/doc.doc', '', '/tmp/gebo-libreoffice').
+//            then(function(path) {
+//                try {
+//                  fse.openSync('/tmp/doc..pid', 'r');         
+//                  test.ok(true);
+//                  fse.openSync(path, 'r');         
+//                  test.ok(false, 'The file at the returned path shouldn\'t exist');
+//                }
+//                catch(err) {
+//                  test.ok(true);
+//                }
+//                test.done();
+//              }).
+//            catch(function(err) {
+//                test.ok(false, err);
+//                test.done();
+//              });
     },
 
     /**
@@ -67,7 +85,7 @@ exports.convert = {
      */
     'Convert a DOC to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc.doc', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.docx');
@@ -88,7 +106,7 @@ exports.convert = {
 
     'Convert a DOC to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc.doc', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.pdf');
@@ -109,7 +127,7 @@ exports.convert = {
 
     'Convert a DOC to an ODT': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc.doc', 'odt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'odt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.oasis.opendocument.text');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.odt');
@@ -130,7 +148,7 @@ exports.convert = {
     
     'Convert a DOC to an RTF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc.doc', 'rtf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'rtf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/rtf');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.rtf');
@@ -151,7 +169,7 @@ exports.convert = {
 
     'Convert a DOC to text': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc.doc', 'txt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc.doc', '/tmp/gebo-libreoffice', { format: 'txt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'text/plain');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.txt');
@@ -177,7 +195,7 @@ exports.convert = {
 
     'Convert a DOC without a file extension to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/doc', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/doc', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/doc.docx');
@@ -201,7 +219,7 @@ exports.convert = {
      */
     'Convert a DOCX to a DOC': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx.docx', 'doc', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx.docx', '/tmp/gebo-libreoffice', { format: 'doc' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/msword');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.doc');
@@ -222,7 +240,7 @@ exports.convert = {
 
     'Convert a DOCX to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx.docx', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx.docx', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.pdf');
@@ -243,7 +261,7 @@ exports.convert = {
 
     'Convert a DOCX to an ODT': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx.docx', 'odt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx.docx', '/tmp/gebo-libreoffice', { format: 'odt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.oasis.opendocument.text');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.odt');
@@ -264,7 +282,7 @@ exports.convert = {
     
     'Convert a DOCX to an RTF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx.docx', 'rtf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx.docx', '/tmp/gebo-libreoffice', { format: 'rtf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/rtf');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.rtf');
@@ -285,7 +303,7 @@ exports.convert = {
 
     'Convert a DOCX to text': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx.docx', 'txt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx.docx', '/tmp/gebo-libreoffice', { format: 'txt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'text/plain');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.txt');
@@ -303,7 +321,7 @@ exports.convert = {
 
     'Convert a DOCX without a file extension to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/docx', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/docx', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/docx.pdf');
@@ -327,7 +345,7 @@ exports.convert = {
      */
     'Convert an ODT to a DOC': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt.odt', 'doc', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt.odt', '/tmp/gebo-libreoffice', { format: 'doc' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/msword');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.doc');
@@ -348,7 +366,7 @@ exports.convert = {
 
     'Convert an ODT to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt.odt', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt.odt', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.pdf');
@@ -369,7 +387,7 @@ exports.convert = {
 
     'Convert an ODT to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt.odt', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt.odt', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.docx');
@@ -390,7 +408,7 @@ exports.convert = {
     
     'Convert an ODT to an RTF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt.odt', 'rtf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt.odt', '/tmp/gebo-libreoffice', { format: 'rtf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/rtf');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.rtf');
@@ -411,7 +429,7 @@ exports.convert = {
 
     'Convert an ODT to text': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt.odt', 'txt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt.odt', '/tmp/gebo-libreoffice', { format: 'txt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'text/plain');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.txt');
@@ -429,7 +447,7 @@ exports.convert = {
 
     'Convert an ODT without a file extension to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/odt', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/odt', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/odt.docx');
@@ -454,7 +472,7 @@ exports.convert = {
      */
     'Convert a PDF to a DOC': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf.pdf', 'doc', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf.pdf', '/tmp/gebo-libreoffice', { format: 'doc' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/msword');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.doc');
@@ -475,7 +493,7 @@ exports.convert = {
 
     'Convert a PDF to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf.pdf', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf.pdf', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.docx');
@@ -496,7 +514,7 @@ exports.convert = {
 
     'Convert a PDF to an ODT': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf.pdf', 'odt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf.pdf', '/tmp/gebo-libreoffice', { format: 'odt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.oasis.opendocument.text');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.odt');
@@ -517,7 +535,7 @@ exports.convert = {
     
     'Convert a PDF to an RTF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf.pdf', 'rtf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf.pdf', '/tmp/gebo-libreoffice', { format: 'rtf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/rtf');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.rtf');
@@ -538,7 +556,7 @@ exports.convert = {
 
     'Convert a PDF to text': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf.pdf', 'txt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf.pdf', '/tmp/gebo-libreoffice', { format: 'txt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'text/plain');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.txt');
@@ -556,7 +574,7 @@ exports.convert = {
 
     'Convert a PDF without a file extension to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/pdf', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/pdf', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/pdf.docx');
@@ -580,7 +598,7 @@ exports.convert = {
      */
     'Convert a RTF to a DOC': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf.rtf', 'doc', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf.rtf', '/tmp/gebo-libreoffice', { format: 'doc' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/msword');
                 test.equal(path, '/tmp/gebo-libreoffice/rtf.doc');
@@ -601,7 +619,7 @@ exports.convert = {
 
     'Convert a RTF to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf.rtf', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf.rtf', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/rtf.docx');
@@ -622,7 +640,7 @@ exports.convert = {
 
     'Convert a RTF to an ODT': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf.rtf', 'odt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf.rtf', '/tmp/gebo-libreoffice', { format: 'odt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.oasis.opendocument.text');
                 test.equal(path, '/tmp/gebo-libreoffice/rtf.odt');
@@ -643,7 +661,7 @@ exports.convert = {
     
     'Convert a RTF to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf.rtf', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf.rtf', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/rtf.pdf');
@@ -664,7 +682,7 @@ exports.convert = {
 
     'Convert a RTF to text': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf.rtf', 'txt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf.rtf', '/tmp/gebo-libreoffice', { format: 'txt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'text/plain');
 
@@ -683,7 +701,7 @@ exports.convert = {
 
     'Convert an RTF without a file extension to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/rtf', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/rtf', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/rtf.docx');
@@ -708,7 +726,7 @@ exports.convert = {
      */
     'Convert text to a DOC': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt.txt', 'doc', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt.txt', '/tmp/gebo-libreoffice', { format: 'doc' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/msword');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.doc');
@@ -729,7 +747,7 @@ exports.convert = {
 
     'Convert text to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt.txt', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt.txt', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.docx');
@@ -750,7 +768,7 @@ exports.convert = {
 
     'Convert text to an ODT': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt.txt', 'odt', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt.txt', '/tmp/gebo-libreoffice', { format: 'odt' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.oasis.opendocument.text');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.odt');
@@ -771,7 +789,7 @@ exports.convert = {
     
     'Convert text to a PDF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt.txt', 'pdf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt.txt', '/tmp/gebo-libreoffice', { format: 'pdf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/pdf');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.pdf');
@@ -792,7 +810,7 @@ exports.convert = {
 
     'Convert text to an RTF': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt.txt', 'rtf', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt.txt', '/tmp/gebo-libreoffice', { format: 'rtf' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/rtf');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.rtf');
@@ -813,7 +831,7 @@ exports.convert = {
 
     'Convert text without a file extension to a DOCX': function(test) {
         test.expect(3);
-        doc.convert('./test/docs/txt', 'docx', '/tmp/gebo-libreoffice').
+        doc.convert('./test/docs/txt', '/tmp/gebo-libreoffice', { format: 'docx' }).
             then(function(path) {
                 test.equal(mime.lookup(path), 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
                 test.equal(path, '/tmp/gebo-libreoffice/txt.docx');
