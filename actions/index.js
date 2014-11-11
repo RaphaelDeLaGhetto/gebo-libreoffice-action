@@ -2,6 +2,7 @@ var fse = require('fs-extra'),
     libre = require('../lib'),
     nconf = require('nconf'),
     q = require('q'),
+    utils = require('gebo-utils'),
     winston = require('winston');
 
 module.exports = function() {
@@ -32,7 +33,7 @@ module.exports = function() {
             }
             libre.convert(message.file.path, destDir, message.content).
                 then(function(path) {
-                    var filename = libre.getOutputFileName(message.file.originalname, message.content.format);
+                    var filename = utils.getOutputFileName(message.file.originalname, message.content.format);
                     var newPath = path.split('/');
                     newPath.pop();
                     newPath.push(filename);

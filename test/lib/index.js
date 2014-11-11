@@ -855,50 +855,50 @@ exports.convert = {
 /**
  * getOutputFileName
  */
-exports.getOutputFileName = {
-
-    'Change the file extension to that specified': function(test) {
-        test.expect(2);
-        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc.doc', 'pdf');        
-        test.equal(filename, 'doc.pdf');
-        filename = doc.getOutputFileName('pdf.pdf', 'docx');        
-        test.equal(filename, 'pdf.docx');
-        test.done();
-    },
-
-    'Change the file extension to that specified on an infile with no extension': function(test) {
-        test.expect(2);
-        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc', 'pdf');        
-        test.equal(filename, 'doc.pdf');
-        filename = doc.getOutputFileName('pdf.pdf', 'docx');
-        test.equal(filename, 'pdf.docx');
-        test.done();
-    },
-
-    'Change the file extension to that specified on hidden file with no extension': function(test) {
-        test.expect(2);
-        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden', 'pdf');        
-        test.equal(filename, '.hidden.pdf');
-        filename = doc.getOutputFileName('.hidden', 'docx');        
-        test.equal(filename, '.hidden.docx');
-        test.done();
-    },
-
-    'Change the file extension to that specified on a hidden file with an extension': function(test) {
-        test.expect(2);
-        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden.rtf', 'pdf');        
-        test.equal(filename, '.hidden.pdf');
-        filename = doc.getOutputFileName('.hidden.pdf', 'docx');        
-        test.equal(filename, '.hidden.docx');
-        test.done();
-    },
-
-    'Should overwrite any unusual extensions': function(test) {
-        test.expect(2);
-        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/somefile.someweirdextension', 'rtf');        
-        test.equal(filename, 'somefile.rtf');
-        filename = doc.getOutputFileName('somefile.someweirdextension', 'docx');        
-        test.equal(filename, 'somefile.docx');
-        test.done();
-    },
-};
+//exports.getOutputFileName = {
+//
+//    'Change the file extension to that specified': function(test) {
+//        test.expect(2);
+//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc.doc', 'pdf');        
+//        test.equal(filename, 'doc.pdf');
+//        filename = doc.getOutputFileName('pdf.pdf', 'docx');        
+//        test.equal(filename, 'pdf.docx');
+//        test.done();
+//    },
+//
+//    'Change the file extension to that specified on an infile with no extension': function(test) {
+//        test.expect(2);
+//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/doc', 'pdf');        
+//        test.equal(filename, 'doc.pdf');
+//        filename = doc.getOutputFileName('pdf.pdf', 'docx');
+//        test.equal(filename, 'pdf.docx');
+//        test.done();
+//    },
+//
+//    'Change the file extension to that specified on hidden file with no extension': function(test) {
+//        test.expect(2);
+//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden', 'pdf');        
+//        test.equal(filename, '.hidden.pdf');
+//        filename = doc.getOutputFileName('.hidden', 'docx');        
+//        test.equal(filename, '.hidden.docx');
+//        test.done();
+//    },
+//
+//    'Change the file extension to that specified on a hidden file with an extension': function(test) {
+//        test.expect(2);
+//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/.hidden.rtf', 'pdf');        
+//        test.equal(filename, '.hidden.pdf');
+//        filename = doc.getOutputFileName('.hidden.pdf', 'docx');        
+//        test.equal(filename, '.hidden.docx');
+//        test.done();
+//    },
+//
+//    'Should overwrite any unusual extensions': function(test) {
+//        test.expect(2);
+//        var filename = doc.getOutputFileName('/tmp/gebo-libreoffice/somefile.someweirdextension', 'rtf');        
+//        test.equal(filename, 'somefile.rtf');
+//        filename = doc.getOutputFileName('somefile.someweirdextension', 'docx');        
+//        test.equal(filename, 'somefile.docx');
+//        test.done();
+//    },
+//};
