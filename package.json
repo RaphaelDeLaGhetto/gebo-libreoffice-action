@@ -29,7 +29,7 @@
   },
   "dependencies": {
     "fs-extra": "^0.12.0",
-    "gebo-utils": "0.0.4",
+    "gebo-utils": "0.0.x",
     "nconf": "*",
     "q": "*",
     "winston": "*"
