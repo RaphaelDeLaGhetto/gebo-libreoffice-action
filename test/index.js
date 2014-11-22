@@ -4,7 +4,8 @@ var agent = require('..'),
     fse = require('fs-extra'),
     mime = require('mime'),
     nconf = require('nconf'),
-    sinon = require('sinon');
+    sinon = require('sinon'),
+    utils = require('gebo-utils');
 
 var DOMAIN = nconf.get('domain');
 
@@ -66,24 +67,27 @@ exports.convert = {
      */
     'Kill the libreoffice process if it executes longer than allowed': function(test) {
         test.expect(1);
-        agent.actions.convert({ resource: 'convert',
-                                execute: 'true',
-                              },
-                              { content: { format: 'docx', raw: true, timeLimit: 5 },
-                                file: {
-                                    path: '/tmp/doc.doc',
-                                    originalname: 'mydoc.doc',
-                                    type: 'application/msword',
-                                    size: 9216,
-                                },
-          }).
-        then(function(doc) {
-            test.equal(doc.error, 'Sorry, that file took too long to process');
-            test.done();
-          }).
-        catch(function(err) {
-            test.ok(false, err);
-            test.done();
+        var messageContent = { format: 'docx', raw: true, pidFile: '/tmp/file.pid', timeLimit: 5 };
+        utils.setTimeLimit(messageContent, function(timer) {
+            agent.actions.convert({ resource: 'convert',
+                                    execute: 'true',
+                                  },
+                                  { content: messageContent,
+                                    file: {
+                                        path: '/tmp/doc.doc',
+                                        originalname: 'mydoc.doc',
+                                        type: 'application/msword',
+                                        size: 9216,
+                                    },
+              }).
+            then(function(doc) {
+                test.equal(doc.error, 'Sorry, that file took too long to process');
+                test.done();
+              }).
+            catch(function(err) {
+                test.ok(false, err);
+                test.done();
+              });
           });
     },
 
@@ -95,7 +99,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -128,7 +132,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -158,7 +162,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -191,7 +195,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -221,7 +225,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt', raw: true },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -254,7 +258,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt' },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -284,7 +288,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf', raw: true },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -317,7 +321,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf' },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -347,7 +351,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt', raw: true },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -386,7 +390,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt' },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc.doc',
                                     originalname: 'mydoc.doc',
@@ -416,7 +420,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc',
                                     originalname: 'mydoc',
@@ -449,7 +453,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc',
                                     originalname: 'mydoc',
@@ -479,7 +483,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/doc-mislabeled.pdf',
                                     originalname: 'mydoc-mislabeled.pdf',
@@ -512,7 +516,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/doc-mislabeled.pdf',
                                     originalname: 'mydoc-mislabeled.pdf',
@@ -545,7 +549,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc', raw: true },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -578,7 +582,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc' },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -609,7 +613,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -642,7 +646,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -672,7 +676,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt', raw: true },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -705,7 +709,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt' },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -735,7 +739,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf', raw: true },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -768,7 +772,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf' },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -798,7 +802,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt', raw: true },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -828,7 +832,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt' },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx.docx',
                                     originalname: 'mydocx.docx',
@@ -858,7 +862,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/docx',
                                     originalname: 'mydocx',
@@ -891,7 +895,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/docx',
                                     originalname: 'mydocx',
@@ -924,7 +928,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc', raw: true },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -957,7 +961,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc' },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -987,7 +991,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1020,7 +1024,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1050,7 +1054,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1083,7 +1087,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1113,7 +1117,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf', raw: true },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1146,7 +1150,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf' },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1176,7 +1180,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt', raw: true },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1206,7 +1210,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt' },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt.odt',
                                     originalname: 'myodt.odt',
@@ -1236,7 +1240,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/odt',
                                     originalname: 'myodt',
@@ -1269,7 +1273,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/odt',
                                     originalname: 'myodt',
@@ -1303,7 +1307,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc', raw: true },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1336,7 +1340,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc' },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1366,7 +1370,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1399,7 +1403,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1429,7 +1433,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt', raw: true },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1462,7 +1466,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt' },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1492,7 +1496,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf', raw: true },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1525,7 +1529,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf' },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1555,7 +1559,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt', raw: true },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1590,7 +1594,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt' },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf.pdf',
                                     originalname: 'mypdf.pdf',
@@ -1620,7 +1624,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/pdf',
                                     originalname: 'mypdf',
@@ -1653,7 +1657,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/pdf',
                                     originalname: 'mypdf',
@@ -1686,7 +1690,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc', raw: true },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1719,7 +1723,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc' },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1749,7 +1753,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1782,7 +1786,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1812,7 +1816,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt', raw: true },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1845,7 +1849,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt' },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1875,7 +1879,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1908,7 +1912,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1938,7 +1942,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt', raw: true },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -1970,7 +1974,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'txt' },
+                              { content: { format: 'txt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf.rtf',
                                     originalname: 'myrtf.rtf',
@@ -2000,7 +2004,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/rtf',
                                     originalname: 'myrtf',
@@ -2033,7 +2037,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/rtf',
                                     originalname: 'myrtf',
@@ -2066,7 +2070,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc', raw: true },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2099,7 +2103,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'doc' },
+                              { content: { format: 'doc', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2129,7 +2133,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2162,7 +2166,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2192,7 +2196,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt', raw: true },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2225,7 +2229,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'odt' },
+                              { content: { format: 'odt', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2255,7 +2259,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf', raw: true },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2288,7 +2292,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'pdf' },
+                              { content: { format: 'pdf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2318,7 +2322,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf', raw: true },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2351,7 +2355,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'rtf' },
+                              { content: { format: 'rtf', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt.txt',
                                     originalname: 'mytxt.txt',
@@ -2381,7 +2385,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx', raw: true },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid', raw: true },
                                 file: { 
                                     path: '/tmp/txt',
                                     originalname: 'mytxt',
@@ -2414,7 +2418,7 @@ exports.convert = {
         agent.actions.convert({ resource: 'convert',
                                 execute: 'true',
                               },
-                              { content: { format: 'docx' },
+                              { content: { format: 'docx', pidFile: '/tmp/file.pid' },
                                 file: { 
                                     path: '/tmp/txt',
                                     originalname: 'mytxt',
